@@ -7,6 +7,8 @@
 
 #include "result.h"
 
+using namespace std;
+
 Result::Result()
 {
 
@@ -14,5 +16,30 @@ Result::Result()
 
 std::string Result::rep()
 {
-	return "IIOO";
+	string val = "<";
+	int i;
+
+	for (i=0; i<rightPosition; i++) val += 'I';
+	for (i=0; i<rightColor; i++) val += 'O';
+
+	val += '>';
+	return val;
 }
+
+#ifdef UNITTEST_RESULT
+#include <cassert>
+
+int main()
+{
+	Result res;
+	assert(res.rep()=="<>");
+	res.incrPosition();
+	assert(res.rep()=="<I>");
+	res.incrColor();
+	res.incrPosition();
+	assert(res.rep()=="<IIO>");
+
+	return 0;
+}
+
+#endif
