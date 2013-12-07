@@ -14,7 +14,7 @@ class Row {
 public:
 	Row();
 	Row(std::string str);
-	bool valid();
+	bool valid() { return true; }
 	Result compare(const Row& r);
 	std::string rep();
 	friend bool operator==(const Row&, const Row&);
