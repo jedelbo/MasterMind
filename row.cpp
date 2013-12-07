@@ -8,34 +8,105 @@
 
 
 #include "row.h"
+#include <sstream>
+#include <random>
+#include <chrono>
+#include <algorithm>
 
 using namespace std;
 
+unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+minstd_rand0 generator(seed);
+uniform_int_distribution<int> distribution(1, NB_VAL);
+
+/*****************************************************************************/
+
+void Row::CodePeg::randomize()
+{
+	mVal = distribution(generator);
+}
+
+bool Row::CodePeg::read(std::istream& istr)
+{
+	if (!(istr >> mVal)) return false;
+	if (mVal > NB_VAL) return false;
+	return true;
+}
+
+std::ostream& operator <<(std::ostream& ostr, const Row::CodePeg& cp)
+{
+	ostr << cp.mVal;
+	return ostr;
+}
+
+/*****************************************************************************/
+
 Row::Row()
 {
-
+	for (CodePeg& cp : mCodePegs) {
+		cp.randomize();
+	}
+	cout << rep() << endl;
 }
 
 Row::Row(std::string str)
 {
-
+	istringstream buf(str);
+	mValid = true;
+	for (CodePeg& cp : mCodePegs) {
+		if (!cp.read(buf)) {
+			mValid = false;
+		}
+	}
 }
 
 Result Row::compare(const Row& r)
 {
 	Result res;
+	auto tmp = mCodePegs;
+	vector<CodePeg> checkForColor;
+
+	// First check for position
+	for (int i = 0; i<ROW_SIZE; i++) {
+		if (r.mCodePegs[i] == tmp[i]) {
+			res.incrPosition();
+			tmp[i].erase();     // This element should not be tested again
+		}
+		else {
+			// If the position is not right, the color must be checked
+			checkForColor.push_back(r.mCodePegs[i]);
+		}
+	}
+	for (CodePeg cp :checkForColor) {
+		auto it = find(tmp.begin(), tmp.end(), cp);
+		if (it != tmp.end()) {
+			res.incrColor();
+			it->erase();     	// This element should not be tested again
+		}
+	}
+
 	return res;
 }
 
 std::string Row::rep()
 {
-	return "1 2 3 4";
+	ostringstream  buf;
+	for (const CodePeg& cp : mCodePegs) {
+		buf << cp << " ";
+	}
+	return buf.str();
 }
 
-bool operator==(const Row&, const Row&)
+bool Row::operator==(const Row& other)
 {
+	for (int i=0; i<ROW_SIZE; i++) {
+		if (!(mCodePegs[i] == other.mCodePegs[i]))
+			return false;
+	}
 	return true;
 }
+
+/*****************************************************************************/
 
 #ifdef UNITTEST_ROW
 #include <cassert>
