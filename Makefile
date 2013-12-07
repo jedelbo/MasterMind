@@ -5,9 +5,11 @@ SRCS = MasterMind.cpp \
 CPPFLAGS = -std=c++11 -g
 
 OBJS = $(SRCS:.cpp=.o)
+DEPS = $(SRCS:.cpp=.d)
 
 MasterMind : $(OBJS)
 	$(CXX) -o $@ $^
+	@touch $@
 
 .Phony: unit_test
 unit_test: test_row test_result
@@ -20,3 +22,10 @@ test_row: row.cpp result.cpp
 test_result: result.cpp
 	$(CXX) $(CPPFLAGS) -DUNITTEST_RESULT -o $@ $^
 
+%.d: %.cpp
+	@set -e; rm -f $@; \
+	$(CXX) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+-include $(DEPS)
