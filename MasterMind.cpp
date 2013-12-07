@@ -18,19 +18,23 @@ int main() {
 	Row secret;
 	string line;
 	vector<Row> guesses;
-	cout << " -> ";
+	cout << "Sequence of " << ROW_SIZE << " random values has been generated" << endl;
+	cout << "   ? ? ? ?" << endl;
+	cout << "-> ";
 	while (getline(cin, line)) {
 		Row guess(line);
 		if (guess.valid()) {
 			guesses.push_back(guess);
+			int i = 1;
+			cout << "==================" << endl;
 			for (Row r : guesses) {
-				cout << r.rep() << " - " << secret.compare(r).rep() << endl;
+				cout << i++  << ": " << r.rep() << "- " << secret.compare(r).rep() << endl;
 			}
 			if (guess == secret) {
 				cout << "Code broken !!!" << endl;
 				break;
 			}
-			if (guesses.size() == 10) {
+			if (i == 10) {
 				cout << "No more guesses !!!" << endl;
 				cout << "Code was: " << secret.rep() << endl;
 				break;
@@ -38,9 +42,9 @@ int main() {
 			}
 		}
 		else {
-			cout << "Illegal input" << endl;
+			cout << "Illegal input!!!" << endl;
 		}
-		cout << " -> ";
+		cout << "-> ";
 	}
 	return 0;
 }
