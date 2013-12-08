@@ -26,11 +26,14 @@ void Row::CodePeg::randomize()
 	mVal = distribution(generator);
 }
 
-bool Row::CodePeg::read(std::istream& istr)
+void Row::CodePeg::read(std::istream& istr)
 {
-	if (!(istr >> mVal)) return false;
-	if (mVal > NB_VAL) return false;
-	return true;
+	if (!(istr >> mVal)) {
+		throw InvalidInput("Key in 4 numbers");  // TODO: Make configurable
+	}
+	if (mVal > NB_VAL) {
+		throw InvalidInput("Number should be between 1 and 6");  // TODO: Make configurable
+	}
 }
 
 std::ostream& operator <<(std::ostream& ostr, const Row::CodePeg& cp)
@@ -52,11 +55,8 @@ Row::Row()
 Row::Row(std::string str)
 {
 	istringstream buf(str);
-	mValid = true;
 	for (CodePeg& cp : mCodePegs) {
-		if (!cp.read(buf)) {
-			mValid = false;
-		}
+		cp.read(buf);
 	}
 }
 
@@ -118,9 +118,6 @@ int main()
 	Row secret3("4 3 4 4");
 
 	Row guess1("1 2 3 4");
-	Row guess2("1 2 3");
-	Row guess3("1 2 a 6");
-	Row guess4("1 2 7 4");
 
 	Row guess5("1 1 2 2");
 	Row guess6("1 2 3 5");
@@ -131,11 +128,31 @@ int main()
 	Row guess10("2 1 1 1");
 	Row guess11("3 3 4 4");
 
-	assert(guess1.valid());
 	assert(guess7.rep()=="4 3 2 1 ");
-	assert(!guess2.valid());
-	assert(!guess3.valid());
-	assert(!guess4.valid());
+	try {
+		Row guess2("1 2 3");
+		cout << "Should not go here" << endl;
+		exit(1);
+	}
+	catch (InvalidInput e) {
+
+	}
+	try {
+		Row guess3("1 2 a 6");
+		cout << "Should not go here" << endl;
+		exit(1);
+	}
+	catch (InvalidInput e) {
+
+	}
+	try {
+		Row guess4("1 2 7 4");
+		cout << "Should not go here" << endl;
+		exit(1);
+	}
+	catch (InvalidInput e) {
+
+	}
 
 	assert(secret1.compare(guess1).rep()=="<IIII>");
 	assert(secret1 == guess1);

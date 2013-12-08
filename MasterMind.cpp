@@ -22,8 +22,8 @@ int main() {
 	cout << "   ? ? ? ?" << endl;
 	cout << "-> ";
 	while (getline(cin, line)) {
-		Row guess(line);
-		if (guess.valid()) {
+		try {
+			Row guess(line);
 			guesses.push_back(guess);
 			int i = 1;
 			cout << "==================" << endl;
@@ -38,11 +38,10 @@ int main() {
 				cout << "No more guesses !!!" << endl;
 				cout << "Code was: " << secret.rep() << endl;
 				break;
-
 			}
 		}
-		else {
-			cout << "Illegal input!!!" << endl;
+		catch (const InvalidInput& e) {
+			cout << e.what() << endl;
 		}
 		cout << "-> ";
 	}

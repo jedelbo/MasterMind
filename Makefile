@@ -22,6 +22,12 @@ test_row: row.cpp result.cpp
 test_result: result.cpp
 	$(CXX) $(CPPFLAGS) -DUNITTEST_RESULT -o $@ $^
 
+.Phony: clean
+clean:
+	@rm -f $(OBJS) $(DEPS)
+	@rm -f MasterMind Mastermind.exe
+	@rm -f test_*
+
 %.d: %.cpp
 	@set -e; rm -f $@; \
 	$(CXX) -MM $(CPPFLAGS) $< > $@.$$$$; \
