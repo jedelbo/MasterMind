@@ -12,13 +12,13 @@
 
 class Result {
 public:
-	Result();
-	void incrPosition() { rightPosition++; }
-	void incrColor() { rightColor++; }
-	std::string rep();
+  Result();
+  void incrPosition() { rightPosition++; }
+  void incrColor() { rightColor++; }
+  std::string rep();
 private:
-	int rightColor = 0;
-	int rightPosition = 0;
+  int rightColor;
+  int rightPosition;
 };
 
 #endif /* RESULT_H_ */

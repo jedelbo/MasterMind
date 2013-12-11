@@ -2,7 +2,7 @@ SRCS = MasterMind.cpp \
        row.cpp \
        result.cpp
 
-CPPFLAGS = -std=c++11 -g
+CPPFLAGS = -std=c++0x -g -Wall
 
 OBJS = $(SRCS:.cpp=.o)
 DEPS = $(SRCS:.cpp=.d)

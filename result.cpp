@@ -9,21 +9,23 @@
 
 using namespace std;
 
-Result::Result()
+Result::Result() :
+  rightColor(0),
+  rightPosition(0)
 {
 
 }
 
 std::string Result::rep()
 {
-	string val = "<";
-	int i;
+  string val = "<";
+  int i;
 
-	for (i=0; i<rightPosition; i++) val += 'I';
-	for (i=0; i<rightColor; i++) val += 'O';
+  for (i=0; i<rightPosition; i++) val += 'I';
+  for (i=0; i<rightColor; i++) val += 'O';
 
-	val += '>';
-	return val;
+  val += '>';
+  return val;
 }
 
 #ifdef UNITTEST_RESULT
@@ -31,15 +33,15 @@ std::string Result::rep()
 
 int main()
 {
-	Result res;
-	assert(res.rep()=="<>");
-	res.incrPosition();
-	assert(res.rep()=="<I>");
-	res.incrColor();
-	res.incrPosition();
-	assert(res.rep()=="<IIO>");
+  Result res;
+  assert(res.rep()=="<>");
+  res.incrPosition();
+  assert(res.rep()=="<I>");
+  res.incrColor();
+  res.incrPosition();
+  assert(res.rep()=="<IIO>");
 
-	return 0;
+  return 0;
 }
 
 #endif
